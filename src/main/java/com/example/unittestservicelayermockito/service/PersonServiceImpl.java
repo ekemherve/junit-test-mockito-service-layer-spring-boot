@@ -8,13 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @Service
 public class PersonServiceImpl implements PersonService {
 
-    private final PersonRepository personRepository;
-    private final PersonMapper personMapper;
+    //If the two fields are final unit test using only mockito wont work
+    private PersonRepository personRepository;
+    private PersonMapper personMapper;
 
     @Autowired
     public PersonServiceImpl(PersonRepository personRepository, PersonMapper personMapper) {
@@ -30,14 +32,18 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public Person save(Person person) throws Exception {
 
+        if(Objects.isNull(person)){
+            throw new IllegalArgumentException("PERSON CANNOT BE NULL");
+        }
+
         List<PersonEntity> persons = personRepository.findByUsernameOrEmail(person.getUsername(), person.getEmail());
         if(!persons.isEmpty()){
             throw new Exception("USERNAME OR EMAIL ALREADY EXITS");
         }
 
-        PersonEntity personToSave = personMapper.mapToEO(person);
-        personToSave = personRepository.save(personToSave);
-        return personMapper.mapToBO(personToSave);
+        PersonEntity entityToSave = personMapper.mapToEO(person);
+        entityToSave = personRepository.save(entityToSave);
+        return personMapper.mapToBO(entityToSave);
     }
 
 

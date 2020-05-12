@@ -36,4 +36,8 @@ public class PersonEntity {
         this.password = password;
         this.email = email;
     }
+
+    public PersonEntity(PersonEntity personEntity){
+        this(personEntity.id, personEntity.getUsername(), personEntity.getPassword(), personEntity.getEmail());
+    }
 }

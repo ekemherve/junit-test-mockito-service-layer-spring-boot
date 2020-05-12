@@ -27,4 +27,8 @@ public class Person {
         this.password = password;
         this.email = email;
     }
+
+    public Person(Person person){
+        this(person.id, person.username, person.getPassword(), person.getEmail());
+    }
 }
